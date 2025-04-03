@@ -77,7 +77,7 @@ def test_rent_regular_book_short_duration():
 
 Você deve realizar os 5 commits descritos abaixo e submeter os 5 links dos commits via Moodle.
 
-# Commit 1: Running the tests
+# Commit 1: Running the tests (Concluído)
 
 Antes de iniciar as atividades de refatoração, precisamos configurar o repositório de trabalho.
 
