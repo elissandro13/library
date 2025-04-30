@@ -1,18 +1,24 @@
 class Price:
     def get_charge(self, days_rented: int) -> float:
+        raise NotImplementedError
+
+    def get_frequent_renter_points(self, days_rented: int) -> int:
+        return 1  # padrão: 1 ponto para quase todos os casos
+
+class RegularPrice(Price):
+    def get_charge(self, days_rented: int) -> float:
+       pass
+
+class NewReleasePrice(Price):
+    def get_charge(self, days_rented: int) -> float:
         pass
 
     def get_frequent_renter_points(self, days_rented: int) -> int:
         pass
 
-class RegularPrice(Price):
-    pass
-
-class NewReleasePrice(Price):
-    pass
-
 class ChildrenPrice(Price):
-    pass
+    def get_charge(self, days_rented: int) -> float:
+        pass
 
 class Book:
 
@@ -22,27 +28,23 @@ class Book:
 
     def __init__(self, title: str, price_code: int):
         self.title = title
-        self.price_code = price_code
+        self.set_price_code(price_code)
+
+    def set_price_code(self, price_code: int):
+        if price_code == Book.REGULAR:
+            self.price = RegularPrice()
+        elif price_code == Book.NEW_RELEASE:
+            self.price = NewReleasePrice()
+        elif price_code == Book.CHILDREN:
+            self.price = ChildrenPrice()
+        else:
+            raise ValueError("Invalid price code")
 
     def get_charge(self, days_rented: int) -> float:
-        amount = 0
-        if self.price_code == Book.REGULAR:
-            amount += 2
-            if days_rented > 2:
-                amount += (days_rented - 2) * 1.5
-        elif self.price_code == Book.NEW_RELEASE:
-            amount += days_rented * 3
-        elif self.price_code == Book.CHILDREN:
-            amount += 1.5
-            if days_rented > 3:
-                amount += (days_rented - 3) * 1.5
-        return amount
+        return self.price.get_charge(days_rented)
 
     def get_frequent_renter_points(self, days_rented: int) -> int:
-        frequent_renter_points = 1
-        if self.price_code == Book.NEW_RELEASE and days_rented > 1:
-            frequent_renter_points += 1
-        return frequent_renter_points
+        return self.price.get_frequent_renter_points(days_rented)
 
 class Rental:
     def __init__(self, book: Book, days_rented: int):
